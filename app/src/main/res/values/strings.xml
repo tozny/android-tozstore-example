@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Android E3DB</string>
+
+    <!--Button Text-->
+    <!--Main Activity-->
+    <string name="button_client_management">Client Management</string>
+    <string name="button_encrypt_text">Encrypt Text</string>
+    <string name="button_decrypt_text">Decrypt Text</string>
+    <string name="button_encrypt_file">Encrypt Photo</string>
+    <string name="button_decrypt_file">Decrypt Photo</string>
+    <string name="button_share_content">Share Content</string>
+    <!--Multiple-->
+    <string name="button_encrypt">Encrypt and Upload</string>
+    <string name="button_decrypt">Decrypt</string>
+    <string name="button_decrypt_record">Decrypt Record</string>
+    <string name="button_take_picture">Decrypt Record</string>
+
+
+    <!--Text Hints-->
+    <!--Multiple-->
+    <string name="hint_content_type">Content Type</string>
+
+    <!--Encrypt Text Activity-->
+    <string name="hint_text_to_encrypt_plain_text">Text To Encrypt</string>
+
+    <!--Decrypt Text Activity-->
+    <string name="hint_text_decrypt_uuid_plain_text">AB0BBF5B-A5D3-41FE-8A4E-B9E28DA995F0</string>
+
+    <!--Text-->
+    <string name="decrypt_text_note">App will decrypt the most recently encrypted payload of the given content type</string>
+</resources>
