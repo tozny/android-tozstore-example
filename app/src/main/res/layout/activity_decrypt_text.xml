@@ -17,7 +17,7 @@
         android:layout_marginRight="16dp"
         android:ems="10"
         android:hint="@string/hint_content_type"
-        android:inputType="textPersonName"
+        android:inputType="text"
         app:layout_constraintEnd_toStartOf="@+id/decrypt_text_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -59,9 +59,9 @@
         android:layout_marginRight="16dp"
         android:ems="10"
         android:hint="@string/hint_text_decrypt_uuid_plain_text"
-        android:inputType="textPersonName"
         android:selectAllOnFocus="false"
         android:singleLine="false"
+        android:inputType="text"
         app:layout_constraintEnd_toStartOf="@+id/decrypt_text_uuid_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/decrypt_text_instruction" />

@@ -76,10 +76,10 @@ class DecryptTextActivity : AppCompatActivity() {
                     }
                     val params = lowerMargin()
                     deque.forEach { record ->
-                        val textView = TextView(applicationContext)
-                        textView.setText("${record.meta().recordId()}\t ${record.meta().lastModified()}")
+                        val textView = Button(applicationContext)
+                        textView.text = "${record.meta().recordId()}\t ${record.meta().lastModified()} ${record.meta().type()}"
                         textView.layoutParams = params
-                        textView.setTag(record.meta().recordId())
+                        textView.contentDescription = record.meta().type()
                         textView.setOnClickListener {
                             decryptText(view, record.meta().recordId().toString())
                         }
@@ -110,6 +110,7 @@ class DecryptTextActivity : AppCompatActivity() {
                     } else {
                         val textView = TextView(applicationContext)
                         textView.text = result.asValue().data().toString()
+                        textView.contentDescription = "decrypted_message"
                         linear.removeAllViews()
                         linear.addView(textView)
                     }

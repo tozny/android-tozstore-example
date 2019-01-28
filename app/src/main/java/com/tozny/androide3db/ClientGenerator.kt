@@ -12,7 +12,6 @@ import java.util.*
 class ClientGenerator(context: AppCompatActivity){
 
     val e3dbClient: MutableLiveData<Client> = MutableLiveData();
-    val fipsLocal: MutableLiveData<FipsLocalRecordEncryptor> = MutableLiveData()
     val eakInfo: MutableLiveData<LocalEAKInfo> = MutableLiveData()
 
     private val configJson =
@@ -25,7 +24,6 @@ class ClientGenerator(context: AppCompatActivity){
 
     init  {
         createDefaultClient()
-        createDefaultFipsConfig()
         getEncryptionKey(context, "session")
     }
 
@@ -69,6 +67,82 @@ class ClientGenerator(context: AppCompatActivity){
         return client.value
     }
 
+    fun saveStringAsDefaultConfig(creds: String, context: AppCompatActivity) {
+        saveAsDefaultConfig(Config.fromJson(creds), context)
+    }
+
+    fun saveAsDefaultConfig(credentials: Config, context: AppCompatActivity) {
+        Config.saveConfigSecurely(AndroidConfigStore(context), credentials.json(), object : ConfigStore.SaveHandler {
+            override fun saveConfigDidSucceed() {
+                // Create a e3dbClient with the given credentials and continue.
+            }
+
+            override fun saveConfigDidCancel() {
+                // In this example app, this method should never be called.
+                TODO("Cancelled config save")
+            }
+
+            override fun saveConfigDidFail(p0: Throwable?) {
+                // In this example app, this method should never be called.
+                TODO("Failed to save config")
+            }
+        })
+    }
+
+    fun saveAsNamedConfig(credentials: Config, context: AppCompatActivity, identifier: String) {
+        Config.saveConfigSecurely(AndroidConfigStore(context, identifier), credentials.json(), object : ConfigStore.SaveHandler {
+            override fun saveConfigDidSucceed() {
+                // Create a e3dbClient with the given credentials and continue.
+            }
+
+            override fun saveConfigDidCancel() {
+                // In this example app, this method should never be called.
+                TODO("Cancelled config save")
+            }
+
+            override fun saveConfigDidFail(p0: Throwable?) {
+                // In this example app, this method should never be called.
+                TODO("Failed to save config")
+            }
+        })
+    }
+
+    fun loadClient(context: AppCompatActivity, identifier: String): Client? {
+        val client: MutableLiveData<Client> = MutableLiveData()
+        Config.loadConfigSecurely(AndroidConfigStore(context, identifier), object : ConfigStore.LoadHandler {
+            override fun loadConfigDidSucceed(p0: String?) {
+                // If this method is called, credentials were found in secure storage and are
+                // available as the `p0` argument. The same credentials will be returned for a given
+                // install (that is, credentials are not re-generated each time).
+                //
+                val config = Config.fromJson(p0)
+                Log.i("MainActivity", "Loaded e3dbClient ${config.clientId}")
+                Log.i("MainActivity", "$p0")
+
+                // Use those credentials to create an instance of the `Client` class, which can be used to communicate
+                // with E3DB.
+                client.postValue(ClientBuilder().fromConfig(config).build())
+            }
+
+            override fun loadConfigDidCancel() {
+                // In this example we should never see this method called.
+                TODO("*impossible*: Config loading cancelled")
+            }
+
+            override fun loadConfigDidFail(p0: Throwable?) {
+                // In this example we should never see this method called.
+                TODO("Failed to load config")
+            }
+
+            override fun loadConfigNotFound() {
+                // Configuration was not found, meaning we have never registered an E3DB e3dbClient
+                // for this install. We'll do that now.
+                client.postValue(createNewConfig(REGISTRATION_TOKEN, context))
+            }
+        })
+        return client.value
+    }
+
     fun loadClient(context: AppCompatActivity): Client? {
         val client: MutableLiveData<Client> = MutableLiveData()
         Config.loadConfigSecurely(AndroidConfigStore(context), object : ConfigStore.LoadHandler {
@@ -104,69 +178,6 @@ class ClientGenerator(context: AppCompatActivity){
         return client.value
     }
 
-    fun createFipsConfigFromJson(config: String): FipsLocalRecordEncryptor {
-        val fromJson = FipsConfig.fromJson(config)
-        return FipsLocalRecordEncryptor(fromJson)
-    }
-
-    fun createDefaultFipsConfig(){
-        fipsLocal.postValue(createFipsConfigFromJson(fipsConfigJson))
-    }
-
-    fun loadFipsConfig(context: AppCompatActivity) {
-        FipsConfig.loadConfigSecurely(AndroidConfigStore(context, "fips-config"), object : ConfigStore.LoadHandler {
-            override fun loadConfigDidSucceed(p0: String?) {
-                // If this method is called, credentials were found in secure storage and are
-                // available as the `p0` argument. The same credentials will be returned for a given
-                // install (that is, credentials are not re-generated each time).
-                //
-                val config = FipsConfig.fromJson(p0)
-                Log.i("MainActivity", "fips config loaded successfully")
-
-                // Use those credentials to create an instance of the `Client` class, which can be used to communicate
-                // with E3DB.
-                fipsLocal.postValue(FipsLocalRecordEncryptor(config))
-            }
-            override fun loadConfigDidCancel() {
-                // In this example we should never see this method called.
-                TODO("*impossible*: Config loading cancelled")
-            }
-
-            override fun loadConfigDidFail(p0: Throwable?) {
-                // In this example we should never see this method called.
-                TODO("Failed to load config")
-            }
-
-            override fun loadConfigNotFound() {
-                // Configuration was not found, meaning we have never registered an E3DB e3dbClient
-                // for this install. We'll do that now.
-                fipsLocal.postValue(FipsLocalRecordEncryptor(FipsLocalRecordEncryptor.register()))
-            }
-        })
-    }
-
-    fun createFipsConfig(context: AppCompatActivity): FipsLocalRecordEncryptor? {
-        val client: MutableLiveData<FipsLocalRecordEncryptor> = MutableLiveData()
-        val credentials = FipsLocalRecordEncryptor.register()
-        Config.saveConfigSecurely(AndroidConfigStore(context, "fips-config"), credentials.json(), object : ConfigStore.SaveHandler {
-            override fun saveConfigDidSucceed() {
-                // Create a e3dbClient with the given credentials and continue.
-                Log.i("MainActivity", "fips config saved successfully")
-                client.postValue(FipsLocalRecordEncryptor(credentials))
-            }
-
-            override fun saveConfigDidCancel() {
-                // In this example app, this method should never be called.
-                TODO("Cancelled config save")
-            }
-
-            override fun saveConfigDidFail(p0: Throwable?) {
-                // In this example app, this method should never be called.
-                TODO("Failed to save config")
-            }
-        })
-        return client.value
-    }
 
     private fun getEncryptionKey(context: AppCompatActivity, recordType: String) {
         /**
