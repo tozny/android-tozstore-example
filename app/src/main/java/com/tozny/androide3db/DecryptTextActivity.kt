@@ -14,6 +14,7 @@ import java.util.*
 
 
 class DecryptTextActivity : AppCompatActivity() {
+    val clients = ClientGenerator(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,36 +51,42 @@ class DecryptTextActivity : AppCompatActivity() {
     fun queryText(view: View) {
         val contentType = findViewById<EditText>(R.id.decrypt_text_content_type_text).text
 
-        val client = ClientGenerator.createClient()
         val queryParams = QueryParamsBuilder().setTypes(contentType.toString()).setIncludeData(true).build()
 //        val queryResult:
-        client.query(queryParams) {result ->
-            if (result.isError) {
-                Toast.makeText(
-                    applicationContext,
-                    "Failed to decrypt text, could not query for records of the given content type",
-                    Toast.LENGTH_LONG).show()
-                Log.e("DecryptTextActivity", "Failed to query for contentType $contentType", result?.asError()?.other())
-            } else {
-                val linear = findViewById<LinearLayout>(R.id.decrypt_text_query_layout)
-                linear.removeAllViews()
-                val records = result.asValue().records()
-                val deque = ArrayDeque<Record>()
-                for (record in records) {
-                    deque.push(record)
-                }
-                val params = lowerMargin()
-                deque.forEach { record ->
-                    val textView = TextView(applicationContext)
-                    textView.setText("${record.meta().recordId()}\t ${record.meta().lastModified()}")
-                    textView.layoutParams = params
-                    textView.setTag(record.meta().recordId())
-                    textView.setOnClickListener {
-                            decryptText(view, record.meta().recordId().toString())
+        clients.e3dbClient.value?.let {
+            it.query(queryParams) { result ->
+                if (result.isError) {
+                    Toast.makeText(
+                        applicationContext,
+                        "Failed to decrypt text, could not query for records of the given content type",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    Log.e(
+                        "DecryptTextActivity",
+                        "Failed to query for contentType $contentType",
+                        result?.asError()?.other()
+                    )
+                } else {
+                    val linear = findViewById<LinearLayout>(R.id.decrypt_text_query_layout)
+                    linear.removeAllViews()
+                    val records = result.asValue().records()
+                    val deque = ArrayDeque<Record>()
+                    for (record in records) {
+                        deque.push(record)
                     }
-                    linear.addView(textView)
+                    val params = lowerMargin()
+                    deque.forEach { record ->
+                        val textView = TextView(applicationContext)
+                        textView.setText("${record.meta().recordId()}\t ${record.meta().lastModified()}")
+                        textView.layoutParams = params
+                        textView.setTag(record.meta().recordId())
+                        textView.setOnClickListener {
+                            decryptText(view, record.meta().recordId().toString())
+                        }
+                        linear.addView(textView)
+                    }
+                    contentType.clear()
                 }
-                contentType.clear()
             }
         }
     }
@@ -90,23 +97,24 @@ class DecryptTextActivity : AppCompatActivity() {
 
     fun decryptText(view: View, recordId: String) {
         val linear = findViewById<LinearLayout>(R.id.decrypt_text_query_layout)
-        val client = ClientGenerator.createClient()
         try {
-            client.read(UUID.fromString(recordId)) {result ->
-                if (result.isError) {
-                    Toast.makeText(
-                        applicationContext,
-                        "Failed to decrypt text, could not access or decrypt record",
-                        Toast.LENGTH_LONG).show()
-                    Log.e("DecryptTextActivity", "Failed to read record $recordId", result?.asError()?.other())
-                } else {
-                    val textView = TextView(applicationContext)
-                    textView.text = result.asValue().data().toString()
-                    linear.removeAllViews()
-                    linear.addView(textView)
+            clients.e3dbClient.value?.let {
+                it.read(UUID.fromString(recordId)) { result ->
+                    if (result.isError) {
+                        Toast.makeText(
+                            applicationContext,
+                            "Failed to decrypt text, could not access or decrypt record",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        Log.e("DecryptTextActivity", "Failed to read record $recordId", result?.asError()?.other())
+                    } else {
+                        val textView = TextView(applicationContext)
+                        textView.text = result.asValue().data().toString()
+                        linear.removeAllViews()
+                        linear.addView(textView)
+                    }
                 }
             }
-
         } catch (e: IllegalArgumentException) {
             Toast.makeText(
                 applicationContext,

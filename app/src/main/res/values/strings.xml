@@ -5,6 +5,8 @@
     <!--Main Activity-->
     <string name="button_client_management">Client Management</string>
     <string name="button_encrypt_text">Encrypt Text</string>
+    <string name="button_encrypt_text_local">Encrypt Text Locally</string>
+    <string name="button_encrypt_text_read_local">Read Locally Encrypted Text</string>
     <string name="button_decrypt_text">Decrypt Text</string>
     <string name="button_encrypt_file">Encrypt Photo</string>
     <string name="button_decrypt_file">Decrypt Photo</string>

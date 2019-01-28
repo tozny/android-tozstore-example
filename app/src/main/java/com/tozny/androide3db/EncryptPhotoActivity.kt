@@ -1,6 +1,5 @@
 package com.tozny.androide3db
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -15,8 +14,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,7 +21,7 @@ import java.util.*
 const val PHOTO_PATH = "com.tozny.androidE3DB.encrypt_photo_path"
 
 class EncryptPhotoActivity : AppCompatActivity() {
-
+    val clients = ClientGenerator(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,35 +118,22 @@ class EncryptPhotoActivity : AppCompatActivity() {
         }
     }
 
-    fun encryptAFile(view: View) {
-
-        val dir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-        val path = dir.path + "/" + UUID.randomUUID()
-        File(path).createNewFile()
-        val stream = FileOutputStream(File(path))
-        stream.write("This is just a little bit of text".toByteArray())
-        stream.close()
-        val client = ClientGenerator.createClient()
-        client.writeFile("android-file", File(path), null) {result ->
-            if (result.isError) {
-                Toast.makeText(applicationContext, "Failed to encrypt and upload please try again", Toast.LENGTH_LONG).show()
-                Log.e("EncryptTextActivity", "Failed to encrypt and upload", result?.asError()?.other())
-            } else {
-                Toast.makeText(applicationContext, "Photo encrypted and uploaded", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-
     fun encryptCurrentPhoto(view: View) {
         val path = intent.extras.getString(PHOTO_PATH)
         if (path != null) {
-            val client = ClientGenerator.createClient()
-            client.writeFile("demo-photo", File(path), null) {result ->
-                if (result.isError) {
-                    Toast.makeText(applicationContext, "Failed to encrypt and upload please try again", Toast.LENGTH_LONG).show()
-                    Log.e("EncryptTextActivity", "Failed to encrypt and upload", result?.asError()?.other())
-                } else {
-                    Toast.makeText(applicationContext, "Photo encrypted and uploaded", Toast.LENGTH_LONG).show()
+
+            clients.e3dbClient.value?.let {
+                it.writeFile("demo-photo", File(path), null) { result ->
+                    if (result.isError) {
+                        Toast.makeText(
+                            applicationContext,
+                            "Failed to encrypt and upload please try again",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        Log.e("EncryptTextActivity", "Failed to encrypt and upload", result?.asError()?.other())
+                    } else {
+                        Toast.makeText(applicationContext, "Photo encrypted and uploaded", Toast.LENGTH_LONG).show()
+                    }
                 }
             }
         }

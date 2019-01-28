@@ -3,11 +3,14 @@
     package="com.tozny.androide3db">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-feature android:name="android.hardware.camera"
-        android:required="true" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
 
     <application
         android:allowBackup="true"
@@ -23,7 +26,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <activity android:name=".MainActivity">
@@ -44,6 +47,14 @@
         <activity
             android:name=".EncryptPhotoActivity"
             android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".DecryptPhotoActivity"
+            android:parentActivityName=".MainActivity"
+            />
+        <activity
+            android:name=".ClientManagerActivity"
+            android:parentActivityName=".MainActivity"
+            />
     </application>
 
 </manifest>
