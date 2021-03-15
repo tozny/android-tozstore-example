@@ -11,6 +11,7 @@
     <string name="button_encrypt_file">Encrypt Photo</string>
     <string name="button_decrypt_file">Decrypt Photo</string>
     <string name="button_share_content">Share Content</string>
+    <string name="button_biomentric_prompt_content">Get Prompt</string>
     <!--Multiple-->
     <string name="button_encrypt">Encrypt and Upload</string>
     <string name="button_decrypt">Decrypt</string>

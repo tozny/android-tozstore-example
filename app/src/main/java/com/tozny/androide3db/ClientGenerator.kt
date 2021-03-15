@@ -1,7 +1,7 @@
 package com.tozny.androide3db
 
-import android.arch.lifecycle.MutableLiveData
-import android.support.v7.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import com.tozny.e3db.*
 import com.tozny.e3db.android.AndroidConfigStore
