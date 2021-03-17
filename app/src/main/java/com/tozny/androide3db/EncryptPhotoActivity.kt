@@ -7,8 +7,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.support.v4.content.FileProvider
-import android.support.v7.app.AppCompatActivity
+import androidx.core.content.FileProvider
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -55,9 +55,10 @@ class EncryptPhotoActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             val findViewById = findViewById<ImageView>(R.id.bigPicture)
-            val filePath = intent.extras.getString(PHOTO_PATH)
+            val filePath = intent.extras?.getString(PHOTO_PATH)
             findViewById.setImageBitmap(scalePhoto(filePath)
             )
 
@@ -113,13 +114,13 @@ class EncryptPhotoActivity : AppCompatActivity() {
         val imageView = findViewById<ImageView>(R.id.bigPicture)
         imageView.setImageDrawable(null)
         val externalFilesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        for (listFile in externalFilesDir.listFiles()) {
+        for (listFile in externalFilesDir?.listFiles()!!) {
             listFile.delete()
         }
     }
 
     fun encryptCurrentPhoto(view: View) {
-        val path = intent.extras.getString(PHOTO_PATH)
+        val path = intent.extras?.getString(PHOTO_PATH)
         if (path != null) {
 
             clients.e3dbClient.value?.let {

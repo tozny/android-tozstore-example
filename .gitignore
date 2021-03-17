@@ -2,3 +2,4 @@
 local.properties
 /appium-testing/env/
 .gradle
+.idea/
