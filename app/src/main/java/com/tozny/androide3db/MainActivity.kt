@@ -36,6 +36,11 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun login(view: View) {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+    }
+    
     fun startGetPrompt(view: View) {
         Log.e("prompt", "logging prompt ")
         val androidConfigStore = AndroidConfigStore(

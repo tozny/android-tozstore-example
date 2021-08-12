@@ -10,6 +10,8 @@ import android.view.View
 import android.widget.*
 import com.tozny.e3db.QueryParamsBuilder
 import com.tozny.e3db.Record
+import com.tozny.e3db.SearchRequest
+import com.tozny.e3db.SearchRequestBuilder
 import java.util.*
 
 
@@ -52,9 +54,17 @@ class DecryptTextActivity : AppCompatActivity() {
         val contentType = findViewById<EditText>(R.id.decrypt_text_content_type_text).text
 
         val queryParams = QueryParamsBuilder().setTypes(contentType.toString()).setIncludeData(true).build()
-//        val queryResult:
+        val searchParams = SearchRequest.SearchParams(
+            SearchRequest.SearchParamCondition.AND,
+            SearchRequest.SearchParamStrategy.EXACT,
+            SearchRequest.SearchTermsBuilder().addRecordTypes(
+                contentType.toString()
+            ).build()
+        )
+        val searchRequest = SearchRequestBuilder().setMatch(listOf(searchParams)).build()
+        //        val queryResult:
         clients.e3dbClient.value?.let {
-            it.query(queryParams) { result ->
+            it.search(searchRequest) { result ->
                 if (result.isError) {
                     Toast.makeText(
                         applicationContext,

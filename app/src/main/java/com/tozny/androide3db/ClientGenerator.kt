@@ -14,8 +14,20 @@ class ClientGenerator(context: AppCompatActivity){
     val e3dbClient: MutableLiveData<Client> = MutableLiveData();
     val eakInfo: MutableLiveData<LocalEAKInfo> = MutableLiveData()
 
-    private val configJson =
-        "{\"public_key\":\"qm1kcSzBc0PgpQHA26RpkGk3CNRK7cOXIAWFSHE5F0k\",\"public_signing_key\":\"uE2qaKUeq6kCL_eIgHSiNLnjQsACVJ16wNqfO5UX1GI\",\"private_signing_key\":\"qmfrsGSLnZbLpLKyiN_Zxpl9whcA6vu7LgVIzNR_31W4TapopR6rqQIv94iAdKI0ueNCwAJUnXrA2p87lRfUYg\",\"api_url\":\"https://api.e3db.com\",\"client_email\":\"android_test_client1\",\"private_key\":\"xsCGpTGEPKzt7hpNvZzaCQKyynkb85oMyA_3pjHf66o\",\"version\":2,\"api_key_id\":\"40ce9e2297e0d438b0ca91e143cc411fd936f4e7ab5fbbb323a4f100e8868195\",\"api_secret\":\"4cd5ee8b4ff8f4861b53cb3b6bd98d3c268f48367291328c0cd10ba19c0cc2ba\",\"client_id\":\"0d401425-6ee7-4067-af30-d62cc50ef08b\"}"
+    private val configJson = """
+       {
+  "version": "2",
+  "public_signing_key": "Fi7R3YNg77C4DUws1IdW9ivav8zq4Z-D3PF3S4kJoLQ",
+  "private_signing_key": "PtVq8_gNEGE5nUXDNnkaJ2junYlKvUIZ23Yk9O1zpEgWLtHdg2DvsLgNTCzUh1b2K9q_zOrhn4Pc8XdLiQmgtA",
+  "client_id": "b895edc7-a8d9-431a-8536-fe281eb0f98f",
+  "api_key_id": "dbd940300fc7949bee258297996c3ac25adec6ffd6943a83de2f3d69d76e1670",
+  "api_secret": "2e87c39de607edae66d8cd1d0be2813def7f68d7f2bdd81a0576b6d6d80dbcdb",
+  "public_key": "wGSCgNS7YWFCqhaAKCzqhCvKqw4MbW5P_qAlWmjMDVI",
+  "private_key": "2wHx3hhYiA5vzBXuV5Q_VF-rh1ZWKxAHdhu03RXdPLo",
+  "api_url": "https://dev.e3db.com",
+  "client_email": ""
+} 
+    """.trimIndent()
     val REGISTRATION_TOKEN = "83f00c3b6e8ac66aef4de99856034a6b3b68baedd1aebdc29502171b0464ad41"
     val HOST = "https://api.e3db.com"
     val fipsConfigJson = "{\"private_key\":\"73kseulsALruDqlVNtuQ9DpTsXH5LIqepJaMrzakGdk\"}"

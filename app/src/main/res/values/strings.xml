@@ -31,4 +31,12 @@
 
     <!--Text-->
     <string name="decrypt_text_note">App will decrypt the most recently encrypted payload of the given content type</string>
+
+    <!--Login Prompts-->
+    <string name="login_realm_name">Realm Name</string>
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_button_text">Login</string>
+    <string name="button_login">Login</string>
+
 </resources>

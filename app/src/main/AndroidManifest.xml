@@ -51,6 +51,8 @@
             android:name=".DecryptPhotoActivity"
             android:parentActivityName=".MainActivity"
             />
+        <activity android:name=".LoginActivity"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".ClientManagerActivity"
             android:parentActivityName=".MainActivity"
